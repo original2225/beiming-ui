@@ -10,15 +10,21 @@
 
 import type { ThemeDefinition } from '@beiming-ui/core/tokens'
 
+// 正文用无衬线：行楷在小字号、长段落里读起来费眼，正文不能牺牲可读性
 const FONT_BODY = '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif'
-const FONT_DISPLAY = '"Noto Serif SC", "Songti SC", "SimSun", "STSong", serif'
+// 标题走行楷：霞鹜文楷（LXGW WenKai），开源可商用。
+// 楷书做骨架、行书做连带，笔画之间是"走"的不是"摆"的 ——
+// 早先用 ZCOOL XiaoWei 发现它其实偏宋体（笔画断开），没有行的味道，故换掉。
+// 回退链保留 ZCOOL XiaoWei / Noto Serif SC / 宋体：缺字体时退化到衬线，
+// 不会掉成黑体 —— 宁可少一点行意，也不能让标题变成无衬线。
+const FONT_DISPLAY = '"LXGW WenKai", "霞鹜文楷", "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", "STSong", cursive, serif'
 
 /** 墨 · 暗色档 */
 export const ink: ThemeDefinition = {
   name: 'ink-dark',
   label: '墨',
   mode: 'dark',
-  radius: '8px',
+  radius: '14px',
   fontBody: FONT_BODY,
   fontDisplay: FONT_DISPLAY,
   tokens: {
@@ -48,7 +54,7 @@ export const rice: ThemeDefinition = {
   name: 'ink-light',
   label: '纸',
   mode: 'light',
-  radius: '8px',
+  radius: '14px',
   fontBody: FONT_BODY,
   fontDisplay: FONT_DISPLAY,
   tokens: {

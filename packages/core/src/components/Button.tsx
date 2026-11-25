@@ -5,6 +5,7 @@
  * 配色与圆角全部走当前皮肤，组件本身不含任何色值。
  */
 
+import { useState, useCallback } from 'react'
 import type { ReactNode } from 'react'
 
 export type ButtonVariant =
@@ -14,6 +15,9 @@ export type ButtonVariant =
   | 'danger'    // 危险
   | 'seal'      // 印章风：朱砂底、微偏转、像盖上去的
   | 'link'      // 文字按钮：只有字
+  | 'outline'   // 描边：透明底 + 主色边，比 secondary 更轻
+  | 'soft'      // 柔色：主色 12% 底的实心片，比 ghost 有存在感
+  | 'ink'       // 墨底：用 text 色做底（暗色皮肤下是白片、浅色下是黑片），对比最强
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
@@ -27,6 +31,8 @@ export interface ButtonProps {
   /** 只显示图标时，由 aria-label 提供无障碍名称 */
   iconOnly?: boolean
   loading?: boolean
+  /** 点击水波涟漪（默认开）。关掉用于密集工具栏，避免频繁动效 */
+  ripple?: boolean
   fullWidth?: boolean
   disabled?: boolean
   children?: ReactNode
@@ -51,12 +57,20 @@ const SIZE: Record<ButtonSize, SizeSpec> = {
   lg: { h: 'h-11', px: 'px-6', text: 'text-[0.9375rem]', gap: 'gap-2', iconSize: '[&_svg]:size-[1.125rem]' },
 }
 
+interface Ripple {
+  id: number
+  x: number
+  y: number
+  size: number
+}
+
 export function Button({
   variant = 'primary',
   size = 'md',
   leftIcon,
   rightIcon,
   loading = false,
+  ripple = true,
   fullWidth = false,
   disabled = false,
   children,
@@ -68,9 +82,31 @@ export function Button({
 }: ButtonProps) {
   const spec = SIZE[size]
   const isLink = variant === 'link'
+  const [ripples, setRipples] = useState<Ripple[]>([])
+
+  // 涟漪从点击处起，覆盖到按钮最远角
+  const spawnRipple = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!ripple || variant === 'link' || loading || disabled) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    // 半径取到最远角，才盖得住整块
+    const size = Math.max(
+      Math.hypot(x, y),
+      Math.hypot(rect.width - x, y),
+      Math.hypot(x, rect.height - y),
+      Math.hypot(rect.width - x, rect.height - y),
+    ) * 2
+    const id = Date.now() + Math.random()
+    setRipples((r) => [...r, { id, x, y, size }])
+    // 动画 620ms，到点清掉，避免节点堆积
+    window.setTimeout(() => {
+      setRipples((r) => r.filter((p) => p.id !== id))
+    }, 680)
+  }, [ripple, variant, loading, disabled])
 
   const base =
-    'inline-flex items-center justify-center rounded-[var(--bm-radius)] font-medium ' +
+    'inline-flex items-center justify-center font-medium ' +
     'transition-[background-color,border-color,box-shadow,transform,color] duration-150 ' +
     'select-none whitespace-nowrap focus-visible:outline-none ' +
     'disabled:pointer-events-none disabled:opacity-50 ' +
@@ -96,7 +132,7 @@ export function Button({
     // 印章风：朱砂底、偏转、像盖上去的
     seal:
       'bg-[var(--bm-danger)] text-white -rotate-2 ' +
-      'font-[var(--bm-font-display,serif)] tracking-wider ' +
+      'tracking-wider ' +
       'shadow-[0_2px_6px_rgba(185,58,58,0.35)] ' +
       'hover:rotate-0 hover:scale-[1.02] ' +
       'focus-visible:ring-2 focus-visible:ring-[var(--bm-danger)]',
@@ -105,21 +141,45 @@ export function Button({
       'bg-transparent text-[var(--bm-accent)] hover:text-[var(--bm-accent-hover)] ' +
       'underline-offset-4 hover:underline ' +
       'focus-visible:ring-2 focus-visible:ring-[var(--bm-ring)]',
+    // 描边：透明底，只有一圈主色边
+    outline:
+      'bg-transparent text-[var(--bm-accent)] border border-[var(--bm-accent)]/45 ' +
+      'hover:bg-[var(--bm-accent)]/8 hover:border-[var(--bm-accent)] ' +
+      'focus-visible:ring-2 focus-visible:ring-[var(--bm-ring)]',
+    // 柔色：主色淡底实心片
+    soft:
+      'bg-[var(--bm-accent)]/12 text-[var(--bm-accent)] border border-transparent ' +
+      'hover:bg-[var(--bm-accent)]/20 ' +
+      'focus-visible:ring-2 focus-visible:ring-[var(--bm-ring)]',
+    // 墨底：用正文色做底，是全场对比最强的那个
+    ink:
+      'bg-[var(--bm-text)] text-[var(--bm-bg)] ' +
+      'hover:opacity-88 ' +
+      'focus-visible:ring-2 focus-visible:ring-[var(--bm-ring)]',
   }
 
   return (
     <button
       type={type}
       disabled={disabled || loading}
-      onClick={onClick}
+      onClick={(e) => {
+        spawnRipple(e)
+        onClick?.(e)
+      }}
       aria-busy={loading || undefined}
       aria-label={ariaLabel}
+      style={{
+        borderRadius: 'var(--bm-radius-sm, 10px)',
+        ...(variant === 'seal' ? { fontFamily: 'var(--bm-font-display, serif)' } : null),
+      }}
       className={[
         base,
         spec.text,
         spec.gap,
         spec.iconSize,
         isLink ? 'h-auto px-0' : [spec.h, spec.px].join(' '),
+        // 涟漪要裁切，否则会溢出按钮边界
+        ripple && !isLink ? 'bm-ripple-host' : '',
         variants[variant],
         fullWidth ? 'w-full' : '',
         iconOnly ? 'aspect-square px-0' : '',
@@ -128,6 +188,19 @@ export function Button({
         .filter(Boolean)
         .join(' ')}
     >
+      {ripples.map((r) => (
+        <span
+          key={r.id}
+          className="bm-ripple"
+          style={{
+            left: r.x - r.size / 2,
+            top: r.y - r.size / 2,
+            width: r.size,
+            height: r.size,
+          }}
+          aria-hidden="true"
+        />
+      ))}
       {loading ? (
         <span
           className="inline-block size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent"

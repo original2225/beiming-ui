@@ -36,7 +36,7 @@ const STYLE_PANES: PaneDef[] = [
     title: '墨',
     subtitle: 'theme-ink · 官网默认',
     theme: ink,
-    note: '水墨 · 暗档 · 圆角 8 · 衬线标题',
+    note: '水墨 · 暗档 · 圆角 14 · 行楷标题',
     inkOnly: true,
   },
   {
@@ -44,7 +44,7 @@ const STYLE_PANES: PaneDef[] = [
     title: '素 · 亮',
     subtitle: 'theme-neutral',
     theme: neutralLight,
-    note: '中性极简 · 圆角 6 · 全无衬线 · 零装饰',
+    note: '中性极简 · 圆角 10 · 全无衬线 · 零装饰',
   },
 ]
 
@@ -72,7 +72,7 @@ export default function App() {
   const [showNeutralDark, setShowNeutralDark] = useState(false)
 
   const panes = tab === 'styles'
-    ? (showNeutralDark ? [...STYLE_PANES, { key: 'nd', title: '素 · 暗', subtitle: 'theme-neutral', theme: neutralDark, note: '中性 · 暗档 · 圆角 6' }] : STYLE_PANES)
+    ? (showNeutralDark ? [...STYLE_PANES, { key: 'nd', title: '素 · 暗', subtitle: 'theme-neutral', theme: neutralDark, note: '中性 · 暗档 · 圆角 10' }] : STYLE_PANES)
     : INK_PANES
 
   return (
@@ -82,13 +82,13 @@ export default function App() {
           <div className="flex items-center gap-3">
             <Seal text="冥" size="md" />
             <div>
-              <h1 className="font-[var(--bm-font-display)] text-base font-bold">北冥 UI · 预览台</h1>
+              <h1 className="text-base font-bold" style={{ fontFamily: 'var(--bm-font-display)' }}>北冥 UI · 预览台</h1>
               <p className="text-xs text-[var(--bm-text-muted)]">v0.2 · core 中性 + 多风格共存</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <div className="flex rounded-[var(--bm-radius)] border border-[var(--bm-border)] p-0.5">
+            <div className="flex border border-[var(--bm-border)] p-0.5" style={{ borderRadius: 'var(--bm-radius, 14px)' }}>
               <button
                 onClick={() => setTab('styles')}
                 className={`rounded px-2.5 py-1 transition-colors ${tab === 'styles' ? 'bg-[var(--bm-surface-hover)] font-medium' : 'text-[var(--bm-text-muted)]'}`}
@@ -113,13 +113,13 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-[1500px] px-6 py-8">
-        <p className="mb-5 text-xs text-[var(--bm-text-muted)]">
+        <p className="bm-spread mb-5 text-xs text-[var(--bm-text-muted)]">
           {tab === 'styles'
             ? '同一批 core 组件，在两种风格下应当完全不同 —— 这就是「风格住在 theme 里，不在组件里」。'
             : '水墨风格的暗档给官网、浅档给云盘。组件、圆角、字体、墨痕印章完全一致，只有色值不同。'}
         </p>
 
-        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+        <div className="bm-stagger grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
           {panes.map(({ key, ...rest }) => <ThemePane key={key} {...rest} />)}
         </div>
 
@@ -139,7 +139,7 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
     <section data-bm-theme={theme.name} className="overflow-hidden rounded-lg border border-[var(--bm-border)]">
       <div className="border-b border-[var(--bm-border)] bg-[var(--bm-surface)] px-4 py-2.5">
         <div className="flex items-baseline justify-between gap-2">
-          <h2 className="font-[var(--bm-font-display)] text-sm font-bold">{title}</h2>
+          <h2 className="text-sm font-bold" style={{ fontFamily: 'var(--bm-font-display)' }}>{title}</h2>
           <span className="text-[0.6875rem] text-[var(--bm-text-muted)]">{subtitle}</span>
         </div>
         {note && <p className="mt-0.5 text-[0.6875rem] text-[var(--bm-text-muted)]">{note}</p>}
@@ -152,9 +152,14 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
             <Button size="sm">主要</Button>
             <Button variant="secondary" size="sm">次要</Button>
             <Button variant="ghost" size="sm">幽灵</Button>
+            <Button variant="outline" size="sm">描边</Button>
+            <Button variant="soft" size="sm">柔色</Button>
+            <Button variant="ink" size="sm">墨底</Button>
             <Button variant="danger" size="sm">危险</Button>
+            <Button variant="seal" size="sm">印章</Button>
             <Button variant="link" size="sm">文字</Button>
           </div>
+          <p className="mt-1.5 text-[0.625rem] text-[var(--bm-text-muted)]">点任意按钮看水波涟漪</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Button size="sm" leftIcon={<Plus />}>新建</Button>
             <Button variant="secondary" size="sm" leftIcon={<Download />}>下载</Button>
@@ -178,17 +183,18 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
 
         <div>
           <Label>卡片 / 徽章</Label>
-          <Card interactive className="p-3">
+          <Card interactive flourish={inkOnly ? 'corner' : 'none'} className="p-3">
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-semibold">主服状态</span>
-              <Badge tone="success" dot>在线</Badge>
+              <Badge tone="success" dot accent="wing">在线</Badge>
             </div>
             <p className="text-[0.6875rem] text-[var(--bm-text-muted)]">12 / 60 人 · 生存模式</p>
           </Card>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <Badge>默认</Badge>
-            <Badge tone="accent">主色</Badge>
-            <Badge tone="warning">警告</Badge>
+            <Badge accent="seal">默认</Badge>
+            <Badge tone="accent" accent="wing">主色</Badge>
+            <Badge tone="warning" accent="seal">警告</Badge>
+            <Badge tone="danger" dot>危险</Badge>
           </div>
         </div>
 
@@ -196,11 +202,34 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
           <>
             <div>
               <Label>水墨装饰 · 仅 theme-ink 有</Label>
-              <InkStroke className="h-6" />
+              <InkStroke className="bm-breath h-6" />
               <div className="mt-2 flex items-center gap-2">
                 <Seal text="北" size="sm" />
                 <Seal text="冥" size="sm" />
                 <SealFrame className="h-7 w-7 text-[var(--bm-danger)]">印</SealFrame>
+              </div>
+            </div>
+
+            <div>
+              <Label>动效 · 呼吸 / 漂移 / 流光</Label>
+              <div className="space-y-2">
+                {/* 呼吸：印章慢慢起伏 */}
+                <div className="flex items-center gap-3">
+                  <Seal text="呼吸" size="sm" className="bm-breath" />
+                  <span className="text-[0.625rem] text-[var(--bm-text-muted)]">bm-breath · 6s 循环</span>
+                </div>
+                {/* 漂移：图案在纸面上轻微移动 */}
+                <div className="flex items-center gap-3">
+                  <WhaleMark className="bm-drift h-6 w-12" />
+                  <span className="text-[0.625rem] text-[var(--bm-text-muted)]">bm-drift · 14s 循环</span>
+                </div>
+                {/* 流光：一道光走过分隔线 */}
+                <div className="relative h-0.5 w-full overflow-hidden rounded-full bg-[var(--bm-border)]">
+                  <div className="bm-shimmer absolute inset-y-0 left-0 w-1/2 text-[var(--bm-accent)]" />
+                </div>
+                <p className="text-[0.625rem] text-[var(--bm-text-muted)]">bm-shimmer · 2.6s 循环</p>
+                {/* 淡光：主按钮待办态 */}
+                <Button size="sm" variant="soft" className="bm-glow">bm-glow · 待办提示</Button>
               </div>
             </div>
 

@@ -45,15 +45,19 @@ const SEAL_SIZE = { sm: 'h-6 w-6 text-[0.65rem]', md: 'h-8 w-8 text-[0.8rem]', l
 
 export function Seal({ text = '印', size = 'md', className = '' }: SealProps) {
   return (
-    <span
-      className={[
-        'inline-flex select-none items-center justify-center rounded-sm',
-        'bg-[var(--bm-danger)] text-white leading-none',
-        'border border-[var(--bm-danger)]/40 shadow-sm -rotate-6',
-        SEAL_SIZE[size], className,
-      ].filter(Boolean).join(' ')}
-    >
-      {text}
+    <span className={['inline-flex', className].filter(Boolean).join(' ')}>
+      {/* 倾斜放在内层：外层留给 bm-breath / bm-drift 这类动画，
+          否则两处 transform 会互相覆盖（同一元素只能有一个 transform） */}
+      <span
+        className={[
+          'inline-flex select-none items-center justify-center rounded-[0.35rem]',
+          'bg-[var(--bm-danger)] text-white leading-none',
+          'border border-[var(--bm-danger)]/40 shadow-sm -rotate-6',
+          SEAL_SIZE[size],
+        ].join(' ')}
+      >
+        {text}
+      </span>
     </span>
   )
 }

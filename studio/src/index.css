@@ -1,10 +1,14 @@
+@import "./lxgw-wenkai.css";
 @import "tailwindcss";
 @import "@beiming-ui/theme-ink/theme.css";
 @import "@beiming-ui/theme-neutral/theme.css";
 
 /* 预览台自身的兜底：任何主题没覆盖到的变量都不会渲染成透明 */
 :root {
-  --bm-radius: 8px;
+  --bm-radius: 14px;
+  --bm-radius-sm: 10px;
+  --bm-radius-lg: 20px;
+  --bm-radius-pill: 999px;
   --bm-bg: #1A1A1A;
   --bm-surface: #2D2D2D;
   --bm-surface-sunken: #242424;
@@ -24,7 +28,7 @@
   --bm-shadow: 0 4px 16px rgba(0,0,0,0.28);
   --bm-shadow-lg: 0 18px 48px rgba(0,0,0,0.45);
   --bm-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --bm-font-display: "Noto Serif SC", "Songti SC", serif;
+  --bm-font-display: "LXGW WenKai", "霞鹜文楷", "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", serif;
 }
 
 html, body, #root { height: 100%; }

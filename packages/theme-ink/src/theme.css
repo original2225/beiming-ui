@@ -1,3 +1,10 @@
+/* 行楷字体不放这里：
+ * theme.css 会被引入到各个产品，不该替使用方决定字体从哪加载。
+ * 需要行楷的项目自己引字体样式（如 studio/src/lxgw-wenkai.css），
+ * 或者用系统自带的"LXGW WenKai"。
+ * 缺字体时下面的回退链会退化到 ZCOOL XiaoWei / 宋体，观感不会崩。
+ */
+
 /* @beiming-ui/theme-ink · 水墨风格（官网 + 云盘共用）
  *
  * 两个明暗档：ink-dark（官网默认）/ ink-light（云盘默认）
@@ -5,7 +12,10 @@
  */
 
 [data-bm-theme="ink-dark"] {
-  --bm-radius: 8px;
+  --bm-radius: 14px;
+  --bm-radius-sm: 10px;
+  --bm-radius-lg: 20px;
+  --bm-radius-pill: 999px;
   --bm-bg: #1A1A1A;
   --bm-surface: #2D2D2D;
   --bm-surface-sunken: #242424;
@@ -25,11 +35,14 @@
   --bm-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
   --bm-shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.45);
   --bm-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
-  --bm-font-display: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
+  --bm-font-display: "LXGW WenKai", "霞鹜文楷", "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", "STSong", cursive, serif;
 }
 
 [data-bm-theme="ink-light"] {
-  --bm-radius: 8px;
+  --bm-radius: 14px;
+  --bm-radius-sm: 10px;
+  --bm-radius-lg: 20px;
+  --bm-radius-pill: 999px;
   --bm-bg: #F7F5F0;
   --bm-surface: #EDF1F4;
   --bm-surface-sunken: #FFFFFF;
@@ -49,7 +62,7 @@
   --bm-shadow: 0 1px 3px rgba(31, 42, 48, 0.10);
   --bm-shadow-lg: 0 18px 48px rgba(31, 42, 48, 0.18);
   --bm-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
-  --bm-font-display: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
+  --bm-font-display: "LXGW WenKai", "霞鹜文楷", "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", "STSong", cursive, serif;
 }
 
 /* ── 主题作用域必须自带底色与文字色 ──────────────────────
@@ -61,4 +74,96 @@
   background-color: var(--bm-bg);
   color: var(--bm-text);
   font-family: var(--bm-font-body, inherit);
+}
+
+/* ─────────────────────────────────────────────────────
+ * 动态点缀
+ *
+ * 原则：动效只做"气息"不做"表演"。水墨的动是呼吸、是洇开、
+ * 是风过纸面，不是弹跳和旋转。所以：
+ * - 时长普遍 3~10 秒，慢到不抢注意力，只让人觉得"画面活着"
+ * - 缓动一律 ease-in-out 或自定义，不用 easeOutBack 这类弹性的
+ * - 全部尊重 prefers-reduced-motion：系统开了减少动效就全停
+ * ───────────────────────────────────────────────────── */
+
+@keyframes bm-ink-breath {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.035); }
+}
+
+@keyframes bm-ink-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%      { transform: translate(3px, -4px) rotate(1.2deg); }
+  66%      { transform: translate(-2px, 3px) rotate(-0.8deg); }
+}
+
+@keyframes bm-ink-spread {
+  from { opacity: 0; transform: scale(0.92); filter: blur(2px); }
+  to   { opacity: 1; transform: scale(1);    filter: blur(0); }
+}
+
+@keyframes bm-ink-ripple {
+  from { transform: scale(0); opacity: 0.45; }
+  to   { transform: scale(2.6); opacity: 0; }
+}
+
+@keyframes bm-ink-wash {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes bm-ink-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46, 90, 107, 0); }
+  50%      { box-shadow: 0 0 0 4px rgba(46, 90, 107, 0.12); }
+}
+
+/* 呼吸：给墨痕、印章、图案用。慢，只让人觉得画面在呼吸 */
+.bm-breath { animation: bm-ink-breath 6s ease-in-out infinite; }
+
+/* 漂移：给背景晕染、装饰图案用。像风吹过纸面 */
+.bm-drift  { animation: bm-ink-drift 14s ease-in-out infinite; }
+
+/* 洇开：元素进场时从模糊里淡出来，像墨落在宣纸上 */
+.bm-spread { animation: bm-ink-spread 600ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
+/* 水波涟漪：按钮点击时用。由 JS 注入元素，见 Button.tsx */
+.bm-ripple-host { position: relative; overflow: hidden; }
+.bm-ripple {
+  position: absolute;
+  border-radius: 999px;
+  background: currentColor;
+  pointer-events: none;
+  animation: bm-ink-ripple 620ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* 淡光：给主按钮的待办状态用，比闪烁柔和 */
+.bm-glow { animation: bm-ink-glow 3s ease-in-out infinite; }
+
+/* 流光：给分隔线、进度条用。渐变横移，像日光照过纸纹 */
+.bm-shimmer {
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  background-size: 200% 100%;
+  animation: bm-ink-wash 2.6s linear infinite;
+  opacity: 0.35;
+}
+
+/* 交错进场：列表逐项出现，每项延迟递增 */
+.bm-stagger > * {
+  animation: bm-ink-spread 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.bm-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.bm-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.bm-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.bm-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.bm-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.bm-stagger > *:nth-child(6) { animation-delay: 300ms; }
+.bm-stagger > *:nth-child(7) { animation-delay: 360ms; }
+.bm-stagger > *:nth-child(8) { animation-delay: 420ms; }
+
+/* 无障碍：系统开了"减少动效"，一律静止 */
+@media (prefers-reduced-motion: reduce) {
+  .bm-breath, .bm-drift, .bm-spread, .bm-glow, .bm-shimmer,
+  .bm-stagger > *, .bm-ripple {
+    animation: none !important;
+  }
 }
