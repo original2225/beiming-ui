@@ -18,3 +18,14 @@ export type {
 
 export { themeToCss, themesToCss } from './tokens'
 export type { ThemeTokens, ThemeDefinition } from './tokens'
+
+export {
+  ORNAMENTS,
+  MountainRange, PeakMark,
+  CloudScroll, CloudPair,
+  WaveLines,
+  Bamboo, PlumBranch,
+  MoonCrescent, FlyingBirds,
+  WhaleMark, SealFrame,
+  InkSplat, BrushStroke, CornerFlourish,
+} from './components/Ornaments'

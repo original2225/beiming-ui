@@ -7,8 +7,12 @@
  */
 
 import { useState } from 'react'
+import { Plus, ArrowRight, Download, Trash2, Search, X } from 'lucide-react'
 import {
   Button, Input, Field, Card, Badge, InkStroke, Seal,
+  MountainRange, PeakMark, CloudScroll, CloudPair, WaveLines,
+  Bamboo, PlumBranch, MoonCrescent, FlyingBirds, WhaleMark,
+  SealFrame, InkSplat, BrushStroke, CornerFlourish,
 } from '@beiming-ui/core'
 import {
   ink as officialInk, rice as officialRice, defaultTheme as officialDefault,
@@ -122,6 +126,15 @@ export default function App() {
   )
 }
 
+function Figure({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-[var(--bm-radius)] border border-[var(--bm-border)] bg-[var(--bm-surface-sunken)] px-1.5 py-2">
+      <div className="flex h-12 w-full items-center justify-center overflow-hidden">{children}</div>
+      <span className="text-[0.625rem] text-[var(--bm-text-muted)]">{label}</span>
+    </div>
+  )
+}
+
 function ThemePane({ title, subtitle, theme, note }: PaneDef) {
   const id = theme.name
   return (
@@ -139,13 +152,33 @@ function ThemePane({ title, subtitle, theme, note }: PaneDef) {
 
       <div className="space-y-4 bg-[var(--bm-bg)] p-4">
         <div>
-          <p className="mb-2 text-[0.6875rem] uppercase tracking-wider text-[var(--bm-text-muted)]">按钮</p>
+          <p className="mb-2 text-[0.6875rem] uppercase tracking-wider text-[var(--bm-text-muted)]">按钮 · 六变体</p>
           <div className="flex flex-wrap gap-2">
             <Button size="sm">主要</Button>
             <Button variant="secondary" size="sm">次要</Button>
             <Button variant="ghost" size="sm">幽灵</Button>
             <Button variant="danger" size="sm">危险</Button>
             <Button variant="seal" size="sm">印章</Button>
+            <Button variant="link" size="sm">文字</Button>
+          </div>
+
+          <p className="mb-2 mt-3 text-[0.6875rem] uppercase tracking-wider text-[var(--bm-text-muted)]">按钮 · 带图标</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" leftIcon={<Plus />}>新建</Button>
+            <Button variant="secondary" size="sm" leftIcon={<Download />}>下载</Button>
+            <Button variant="ghost" size="sm" rightIcon={<ArrowRight />}>继续</Button>
+            <Button variant="secondary" size="sm" iconOnly aria-label="搜索"><Search /></Button>
+            <Button variant="ghost" size="sm" iconOnly aria-label="删除"><Trash2 /></Button>
+            <Button size="sm" loading>提交中</Button>
+            <Button variant="secondary" size="sm" disabled>禁用</Button>
+          </div>
+
+          <p className="mb-2 mt-3 text-[0.6875rem] uppercase tracking-wider text-[var(--bm-text-muted)]">按钮 · 四尺寸</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="xs">极小</Button>
+            <Button size="sm">小</Button>
+            <Button size="md">中</Button>
+            <Button size="lg">大</Button>
           </div>
         </div>
 
@@ -184,6 +217,62 @@ function ThemePane({ title, subtitle, theme, note }: PaneDef) {
           <div className="mt-2 flex gap-2">
             <Seal text="北" size="sm" />
             <Seal text="冥" size="sm" />
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-[0.6875rem] uppercase tracking-wider text-[var(--bm-text-muted)]">水墨图案 · 十四种</p>
+
+          <div className="grid grid-cols-3 gap-2">
+            <Figure label="远山">
+              <MountainRange className="h-12 w-full" />
+            </Figure>
+            <Figure label="单峰">
+              <PeakMark className="h-12 w-full opacity-70" />
+            </Figure>
+            <Figure label="祥云">
+              <CloudScroll className="h-12 w-full opacity-80" />
+            </Figure>
+
+            <Figure label="双云">
+              <CloudPair className="h-12 w-full opacity-80" />
+            </Figure>
+            <Figure label="水波">
+              <WaveLines className="h-12 w-full opacity-80" />
+            </Figure>
+            <Figure label="竹">
+              <Bamboo className="h-12 w-full opacity-80" />
+            </Figure>
+
+            <Figure label="梅枝">
+              <PlumBranch className="h-12 w-full opacity-80" />
+            </Figure>
+            <Figure label="残月">
+              <MoonCrescent className="h-12 w-full opacity-85" />
+            </Figure>
+            <Figure label="飞鸟">
+              <FlyingBirds className="h-12 w-full opacity-80" />
+            </Figure>
+
+            <Figure label="鲸">
+              <WhaleMark className="h-12 w-full opacity-80" />
+            </Figure>
+            <Figure label="印框">
+              <SealFrame className="h-12 w-12 text-[var(--bm-danger)]">北</SealFrame>
+            </Figure>
+            <Figure label="墨点">
+              <InkSplat className="h-12 w-full opacity-80" />
+            </Figure>
+
+            <Figure label="笔触">
+              <BrushStroke className="h-12 w-full opacity-70" />
+            </Figure>
+            <Figure label="角花">
+              <CornerFlourish className="h-12 w-full opacity-70" />
+            </Figure>
+            <Figure label="—">
+              <span className="text-[0.625rem] text-[var(--bm-text-muted)]">currentColor 跟随皮肤</span>
+            </Figure>
           </div>
         </div>
       </div>
