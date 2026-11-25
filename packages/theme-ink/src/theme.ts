@@ -1,8 +1,11 @@
 /**
- * @beiming-ui/theme-official-site
+ * @beiming-ui/theme-ink · 水墨风格
  *
- * 官网特化：水墨宣纸、墨痕、朱砂印章。
- * 黑发深墨底 + 宣纸浅底两套皮肤，登录/注册弹窗用的是「纸」这套。
+ * 北冥官网和云盘**共用这一套**。暗色给官网（首页大图需要暗底托住画面），
+ * 浅色给云盘（文件列表、表格、路径这类高密度信息在浅底上更耐看）。
+ *
+ * 两者不是两个品牌的两套皮肤，而是同一风格的两个明暗档 ——
+ * 所以组件、圆角、字体、墨痕印章全部一致，只有色值不同。
  */
 
 import type { ThemeDefinition } from '@beiming-ui/core/tokens'
@@ -10,10 +13,10 @@ import type { ThemeDefinition } from '@beiming-ui/core/tokens'
 const FONT_BODY = '"Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif'
 const FONT_DISPLAY = '"Noto Serif SC", "Songti SC", "SimSun", "STSong", serif'
 
-/** 墨：深色主皮肤 */
+/** 墨 · 暗色档 */
 export const ink: ThemeDefinition = {
-  name: 'official-ink',
-  label: '北冥·墨',
+  name: 'ink-dark',
+  label: '墨',
   mode: 'dark',
   radius: '8px',
   fontBody: FONT_BODY,
@@ -40,10 +43,10 @@ export const ink: ThemeDefinition = {
   },
 }
 
-/** 纸：浅色皮肤，取 logo 四角那片浅蓝灰 */
+/** 纸 · 浅色档 */
 export const rice: ThemeDefinition = {
-  name: 'official-rice',
-  label: '北冥·纸',
+  name: 'ink-light',
+  label: '纸',
   mode: 'light',
   radius: '8px',
   fontBody: FONT_BODY,
@@ -71,6 +74,8 @@ export const rice: ThemeDefinition = {
 }
 
 export const themes = [ink, rice]
-// 官网主用暗色：首页铺满 Minecraft 场景大图，暗底让画面成为主角；
-// 浅色（纸）只用在登录/注册这种需要长时间读表单的地方。
+/** 官网默认暗色 */
+export const defaultDark = ink.name
+/** 云盘默认浅色 */
+export const defaultLight = rice.name
 export const defaultTheme = ink.name

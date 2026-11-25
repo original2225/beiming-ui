@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "@beiming-ui/theme-official-site/theme.css";
-@import "@beiming-ui/theme-netdisk/theme.css";
+@import "@beiming-ui/theme-ink/theme.css";
+@import "@beiming-ui/theme-neutral/theme.css";
 
-/* 预览台自身的中性兜底：任何主题没覆盖到的变量都不会渲染成透明 */
+/* 预览台自身的兜底：任何主题没覆盖到的变量都不会渲染成透明 */
 :root {
   --bm-radius: 8px;
   --bm-bg: #1A1A1A;
@@ -34,15 +34,4 @@ body {
   background-color: var(--bm-bg);
   color: var(--bm-text);
   -webkit-font-smoothing: antialiased;
-}
-
-/* ── 主题作用域必须自带底色与文字色 ──────────────────────
- * 只给 [data-bm-theme] 定义变量是不够的：若外层是深色页面，
- * 浅色主题里的文字会继承外层的浅色文字，出现白底白字。
- * 所以每个主题作用域自己声明 background + color，不依赖祖先。
- */
-[data-bm-theme] {
-  background-color: var(--bm-bg);
-  color: var(--bm-text);
-  font-family: var(--bm-font-body, inherit);
 }

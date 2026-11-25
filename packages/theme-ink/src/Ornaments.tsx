@@ -1,8 +1,12 @@
 /**
- * 北冥 UI · 水墨小图案
+ * @beiming-ui/theme-ink · 水墨小图案
  *
  * 全部手写 SVG path，用 currentColor 着色，所以图案自动跟随当前皮肤的
  * text 色（配 opacity 做浓淡），不需要为每套皮肤单独准备素材。
+ *
+ * 这些是「水墨」这一风格专属的装饰，不属于通用组件。
+ * 用别的风格（如中性风）时不需要它们 —— 这正是把它们留在 theme-ink
+ * 而不是 core 的原因。
  *
  * 笔法约定（与官网现有 InkWashBg / InkBanner 一致）：
  * - 山、云、水用贝塞尔填充带或多层叠加，靠 opacity 拉开远近

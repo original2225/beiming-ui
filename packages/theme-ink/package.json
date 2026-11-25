@@ -1,12 +1,13 @@
 {
-  "name": "@beiming-ui/theme-netdisk",
+  "name": "@beiming-ui/theme-ink",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "网盘特化：蓝紫渐变、圆角 12、文件操作密度优先",
+  "description": "水墨风格：宣纸底、墨痕、朱砂印章。北冥官网与云盘共用。",
   "exports": {
     ".": "./src/index.ts",
-    "./theme.css": "./src/theme.css"
+    "./theme.css": "./src/theme.css",
+    "./ornaments": "./src/Ornaments.tsx"
   },
   "dependencies": {
     "@beiming-ui/core": "*"

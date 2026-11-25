@@ -1,9 +1,9 @@
 {
-  "name": "@beiming-ui/theme-official-site",
+  "name": "@beiming-ui/theme-neutral",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "官网特化：水墨宣纸、墨痕、朱砂印章",
+  "description": "中性极简风格：无装饰、无衬线、克制。用来验证 core 不绑任何风格。",
   "exports": {
     ".": "./src/index.ts",
     "./theme.css": "./src/theme.css"

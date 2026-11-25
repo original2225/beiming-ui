@@ -1,9 +1,10 @@
-/* @beiming-ui/theme-official-site · 水墨宣纸
- * 这两个 [data-bm-theme] 块与 src/theme.ts 的取值一一对应。
- * 引入方式：import '@beiming-ui/theme-official-site/theme.css'
+/* @beiming-ui/theme-ink · 水墨风格（官网 + 云盘共用）
+ *
+ * 两个明暗档：ink-dark（官网默认）/ ink-light（云盘默认）
+ * 组件、圆角 8、字体、墨痕印章完全一致，只有色值不同。
  */
 
-[data-bm-theme="official-ink"] {
+[data-bm-theme="ink-dark"] {
   --bm-radius: 8px;
   --bm-bg: #1A1A1A;
   --bm-surface: #2D2D2D;
@@ -27,7 +28,7 @@
   --bm-font-display: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
 }
 
-[data-bm-theme="official-rice"] {
+[data-bm-theme="ink-light"] {
   --bm-radius: 8px;
   --bm-bg: #F7F5F0;
   --bm-surface: #EDF1F4;

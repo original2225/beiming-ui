@@ -1,7 +1,11 @@
 /**
- * 北冥 UI · Input / Field / Card / Badge / InkStroke / Seal
+ * 北冥 UI · Input / Textarea / Field / Card / Badge
  *
- * 放在一个文件里是因为它们互为最小依赖单元；registry 分发时会按 item 拆开。
+ * 这些是**中性**组件：不含任何风格倾向，配色全部来自 --bm-* token。
+ * 它们在任何风格下都成立 —— 换个 theme 包，外观就跟着变。
+ *
+ * 风格专属的东西（墨痕分隔线、朱砂印章、水墨图案）不在这里，
+ * 在对应的 theme 包里。例如 theme-ink 提供 InkStroke / Seal / Ornaments。
  */
 
 import type { ReactNode, InputHTMLAttributes, TextareaHTMLAttributes } from 'react'
@@ -172,56 +176,6 @@ export function Badge({ children, tone = 'neutral', dot = false, className = '' 
     >
       {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />}
       {children}
-    </span>
-  )
-}
-
-/* ─────────────── InkStroke（墨痕分隔线 · 北冥特色）─────────────── */
-
-export interface InkStrokeProps {
-  className?: string
-  /** 颜色类；默认用当前皮肤的弱化文字色 */
-  color?: string
-}
-
-export function InkStroke({ className = '', color = 'text-[var(--bm-text-muted)]' }: InkStrokeProps) {
-  return (
-    <svg
-      viewBox="0 0 1200 24"
-      preserveAspectRatio="none"
-      className={`h-8 w-full ${color} ${className}`}
-      aria-hidden="true"
-    >
-      <path
-        d="M0,14 C150,10 250,18 400,12 C550,6 650,20 800,13 C950,6 1050,16 1200,12 L1200,16 C1050,20 950,10 800,17 C650,24 550,10 400,16 C250,22 150,14 0,18 Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
-/* ─────────────── Seal（朱砂印章 · 北冥特色）─────────────── */
-
-export interface SealProps {
-  text?: string
-  /** sm = 1.5rem，md = 2rem，lg = 2.5rem */
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
-}
-
-const SEAL_SIZE = { sm: 'h-6 w-6 text-[0.65rem]', md: 'h-8 w-8 text-[0.8rem]', lg: 'h-10 w-10 text-base' }
-
-export function Seal({ text = '印', size = 'md', className = '' }: SealProps) {
-  return (
-    <span
-      className={[
-        'inline-flex select-none items-center justify-center rounded-sm',
-        'bg-[var(--bm-danger)] text-white leading-none',
-        'border border-[var(--bm-danger)]/40 shadow-sm -rotate-6',
-        SEAL_SIZE[size], className,
-      ].filter(Boolean).join(' ')}
-    >
-      {text}
     </span>
   )
 }

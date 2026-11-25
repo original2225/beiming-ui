@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@beiming-ui/core": "*",
-    "@beiming-ui/theme-official-site": "*",
-    "@beiming-ui/theme-netdisk": "*",
+    "@beiming-ui/theme-ink": "*",
+    "@beiming-ui/theme-neutral": "*",
     "lucide-react": "^1.23.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

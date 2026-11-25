@@ -1,0 +1,59 @@
+/* @beiming-ui/theme-neutral · 中性极简风格
+ *
+ * 刻意不提供任何装饰组件（无墨痕、无印章）。
+ * 同一批 core 组件在这里应该看起来完全不像北冥水墨。
+ */
+
+[data-bm-theme="neutral-light"] {
+  --bm-radius: 6px;
+  --bm-bg: #FAFAFA;
+  --bm-surface: #FFFFFF;
+  --bm-surface-sunken: #F5F5F5;
+  --bm-surface-hover: #F0F0F0;
+  --bm-border: rgba(0, 0, 0, 0.09);
+  --bm-border-strong: rgba(0, 0, 0, 0.20);
+  --bm-text: #171717;
+  --bm-text-secondary: #4D4D4D;
+  --bm-text-muted: #7A7A7A;
+  --bm-accent: #2563EB;
+  --bm-accent-hover: #1D4ED8;
+  --bm-accent-foreground: #FFFFFF;
+  --bm-danger: #DC2626;
+  --bm-success: #059669;
+  --bm-warning: #D97706;
+  --bm-ring: rgba(37, 99, 235, 0.30);
+  --bm-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --bm-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --bm-font-body: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --bm-font-display: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+[data-bm-theme="neutral-dark"] {
+  --bm-radius: 6px;
+  --bm-bg: #0A0A0A;
+  --bm-surface: #141414;
+  --bm-surface-sunken: #0F0F0F;
+  --bm-surface-hover: #1E1E1E;
+  --bm-border: rgba(255, 255, 255, 0.09);
+  --bm-border-strong: rgba(255, 255, 255, 0.20);
+  --bm-text: #EDEDED;
+  --bm-text-secondary: #A3A3A3;
+  --bm-text-muted: #6F6F6F;
+  --bm-accent: #3B82F6;
+  --bm-accent-hover: #60A5FA;
+  --bm-accent-foreground: #FFFFFF;
+  --bm-danger: #EF4444;
+  --bm-success: #10B981;
+  --bm-warning: #F59E0B;
+  --bm-ring: rgba(59, 130, 246, 0.40);
+  --bm-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --bm-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --bm-font-body: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --bm-font-display: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+[data-bm-theme] {
+  background-color: var(--bm-bg);
+  color: var(--bm-text);
+  font-family: var(--bm-font-body, inherit);
+}
