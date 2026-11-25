@@ -1,0 +1,18 @@
+{
+  "name": "@beiming-ui/theme-netdisk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "网盘特化：蓝紫渐变、圆角 12、文件操作密度优先",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css"
+  },
+  "dependencies": {
+    "@beiming-ui/core": "*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

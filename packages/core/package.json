@@ -1,0 +1,15 @@
+{
+  "name": "@beiming-ui/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "北冥 UI 通用组件与设计 token（不含任何品牌配色）",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens": "./src/tokens.ts"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

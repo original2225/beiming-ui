@@ -1,0 +1,28 @@
+{
+  "name": "studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "北冥 UI 预览台：一屏对比通用组件在官网 / 网盘两套特化下的样子",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build"
+  },
+  "dependencies": {
+    "@beiming-ui/core": "*",
+    "@beiming-ui/theme-official-site": "*",
+    "@beiming-ui/theme-netdisk": "*",
+    "lucide-react": "^1.23.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "tailwindcss": "^4.3.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  }
+}

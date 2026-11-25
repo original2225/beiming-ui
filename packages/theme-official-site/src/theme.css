@@ -1,0 +1,63 @@
+/* @beiming-ui/theme-official-site · 水墨宣纸
+ * 这两个 [data-bm-theme] 块与 src/theme.ts 的取值一一对应。
+ * 引入方式：import '@beiming-ui/theme-official-site/theme.css'
+ */
+
+[data-bm-theme="official-ink"] {
+  --bm-radius: 8px;
+  --bm-bg: #1A1A1A;
+  --bm-surface: #2D2D2D;
+  --bm-surface-sunken: #242424;
+  --bm-surface-hover: #3D3D3D;
+  --bm-border: rgba(247, 245, 240, 0.08);
+  --bm-border-strong: rgba(247, 245, 240, 0.18);
+  --bm-text: #F7F5F0;
+  --bm-text-secondary: #B8B3A8;
+  --bm-text-muted: #7A7A7A;
+  --bm-accent: #2E5A6B;
+  --bm-accent-hover: #3D7488;
+  --bm-accent-foreground: #F7F5F0;
+  --bm-danger: #B93A3A;
+  --bm-success: #4A9B7F;
+  --bm-warning: #B87333;
+  --bm-ring: rgba(46, 90, 107, 0.55);
+  --bm-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --bm-shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.45);
+  --bm-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  --bm-font-display: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
+}
+
+[data-bm-theme="official-rice"] {
+  --bm-radius: 8px;
+  --bm-bg: #F7F5F0;
+  --bm-surface: #EDF1F4;
+  --bm-surface-sunken: #FFFFFF;
+  --bm-surface-hover: #E3E9ED;
+  --bm-border: rgba(46, 90, 107, 0.18);
+  --bm-border-strong: rgba(46, 90, 107, 0.32);
+  --bm-text: #1F2A30;
+  --bm-text-secondary: #4A5A64;
+  --bm-text-muted: #6B7B85;
+  --bm-accent: #2E5A6B;
+  --bm-accent-hover: #3D7488;
+  --bm-accent-foreground: #F7F5F0;
+  --bm-danger: #B93A3A;
+  --bm-success: #3F7F68;
+  --bm-warning: #B87333;
+  --bm-ring: rgba(46, 90, 107, 0.35);
+  --bm-shadow: 0 1px 3px rgba(31, 42, 48, 0.10);
+  --bm-shadow-lg: 0 18px 48px rgba(31, 42, 48, 0.18);
+  --bm-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  --bm-font-display: "Noto Serif SC", "Songti SC", "SimSun", "STSong", serif;
+}
+
+/* ── 主题作用域必须自带底色与文字色 ──────────────────────
+ * 只给 [data-bm-theme] 定义变量是不够的：若外层是深色页面，
+ * 浅色主题里的文字会继承外层的浅色文字，出现白底白字。
+ * 所以每个主题作用域自己声明 background + color，不依赖祖先。
+ */
+[data-bm-theme] {
+  background-color: var(--bm-bg);
+  color: var(--bm-text);
+  font-family: var(--bm-font-body, inherit);
+}
