@@ -57,3 +57,24 @@
   color: var(--bm-text);
   font-family: var(--bm-font-body, inherit);
 }
+
+/* 骨架屏高光横扫：比单纯闪烁更像"正在加载" */
+@keyframes bm-skeleton-sweep {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 不确定进度条：来回滑动 */
+@keyframes bm-progress-slide {
+  0%   { left: -33%; }
+  50%  { left: 50%; }
+  100% { left: 100%; }
+}
+
+/* 同理，减少动效时停掉 */
+@media (prefers-reduced-motion: reduce) {
+  .bm-shimmer-skeleton span {
+    animation: none !important;
+  }
+}

@@ -10,7 +10,11 @@
 
 import { useState } from 'react'
 import { Plus, ArrowRight, Download, Trash2, Search } from 'lucide-react'
-import { Button, Input, Field, Card, Badge } from '@beiming-ui/core'
+import {
+  Button, Input, Field, Card, Badge,
+  Select, Checkbox, Switch, RadioGroup, Slider,
+  Alert, Spinner, Skeleton, Progress, Tooltip,
+} from '@beiming-ui/core'
 import type { ThemeDefinition } from '@beiming-ui/core'
 import {
   ink, rice, InkStroke, Seal,
@@ -124,7 +128,7 @@ export default function App() {
         </div>
 
         <footer className="mt-8 border-t border-[var(--bm-border)] pt-5 text-xs text-[var(--bm-text-muted)]">
-          core：{['Button', 'Input', 'Textarea', 'Field', 'Card', 'Badge'].join(' / ')}
+          core：{['Button', 'Input', 'Textarea', 'Field', 'Card', 'Badge', 'Select', 'Checkbox', 'Switch', 'RadioGroup', 'Slider', 'Alert', 'Spinner', 'Skeleton', 'Progress', 'Tooltip'].join(' / ')}
           {'　·　water墨专属：'}
           {['InkStroke', 'Seal', '+14 图案'].join(' / ')}
         </footer>
@@ -178,6 +182,60 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
             <Field label="密码" error="至少 10 位" htmlFor={`p-${id}`}>
               <Input id={`p-${id}`} type="password" placeholder="••••••••••" invalid />
             </Field>
+          </div>
+        </div>
+
+        <div>
+          <Label>表单控件</Label>
+          <div className="space-y-2.5">
+            <Select
+              options={[
+                { value: 'survival', label: '生存模式' },
+                { value: 'creative', label: '创造模式' },
+                { value: 'adventure', label: '冒险模式', disabled: true },
+              ]}
+              defaultValue="survival"
+              aria-label="游戏模式"
+            />
+            <Slider defaultValue={62} showValue />
+            <div className="flex flex-wrap items-center gap-3">
+              <Checkbox defaultChecked label="记住我" />
+              <Switch defaultChecked label="开启通知" />
+            </div>
+            <RadioGroup
+              direction="horizontal"
+              defaultValue="a"
+              options={[
+                { value: 'a', label: '正式服' },
+                { value: 'b', label: '测试服' },
+              ]}
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label>反馈</Label>
+          <div className="space-y-2">
+            <Alert tone="success" title="提交成功">你的入服申请已进入审核队列。</Alert>
+            <Alert tone="warning" onClose={() => {}}>规则版本已更新，请重新确认。</Alert>
+            <div className="flex items-center gap-3">
+              <Spinner size="sm" />
+              <Spinner />
+              <Tooltip content="悬停显示提示">
+                <Button variant="secondary" size="sm">悬浮我</Button>
+              </Tooltip>
+            </div>
+            <div className="space-y-1.5">
+              <Progress value={68} showLabel />
+              <Progress indeterminate tone="accent" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton circle width="2rem" height="2rem" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton height="0.6rem" className="w-3/4" />
+                <Skeleton height="0.6rem" className="w-1/2" />
+              </div>
+            </div>
           </div>
         </div>
 

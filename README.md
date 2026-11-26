@@ -76,6 +76,19 @@ import '@beiming-ui/theme-ink/theme.css'
 
 需要新颜色时先问：这是新槽位（加进契约）还是某个风格特有的（放 theme 包）。想加水墨纹样，放 `theme-ink`，不要塞 core。
 
+**三、用 Tailwind v4 的项目必须写 `@source`。**
+
+v4 默认只扫描当前项目目录，**扫不到 monorepo 里的 `packages/*`**。不加这几行，core 组件用到的类（`size-3`、`size-4`、`tabular-nums`…）一个都不会生成 —— 表现为 SVG 没有宽度被撑满父容器（一个 12×12 的下拉箭头会变成 600×600）、数字不对齐。这个失败是静默的，不报错。
+
+```css
+@import "tailwindcss";
+@source "../../packages/core/src";
+@source "../../packages/theme-ink/src";
+@source "../../packages/theme-neutral/src";
+```
+
+路径相对于写 `@source` 的 css 文件。改完必须重启 dev server，热更新不生效。
+
 ## Token 契约
 
 键名固定，全部必填——漏一项编译期报错，不会上线才发现某处透明。
@@ -95,7 +108,11 @@ import '@beiming-ui/theme-ink/theme.css'
 
 **core（中性，任何风格都成立）**
 
-`Button`（6 变体 × 4 尺寸，带图标槽）、`Input`、`Textarea`、`Field`、`Card`、`Badge`
+基础：`Button`（9 变体 × 4 尺寸，带图标槽、点击水波）、`Input`、`Textarea`、`Field`、`Card`（含角落装饰）、`Badge`（含点缀）
+
+表单：`Select`（自定义下拉）、`Checkbox`、`Switch`、`RadioGroup`、`Slider`
+
+反馈：`Alert`（4 语义色）、`Spinner`、`Skeleton`、`Progress`（含不确定态）、`Tooltip`
 
 **theme-ink（水墨专属）**
 

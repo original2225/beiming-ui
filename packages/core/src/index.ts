@@ -18,5 +18,21 @@ export type {
   InputProps, TextareaProps, FieldProps, CardProps, BadgeProps, BadgeTone,
 } from './components/Primitives'
 
+/* 表单控件 */
+export { Select, Checkbox, Switch, RadioGroup, Slider } from './components/FormControls'
+export type {
+  SelectProps, SelectOption,
+  CheckboxProps, SwitchProps,
+  RadioGroupProps, RadioOption,
+  SliderProps,
+} from './components/FormControls'
+
+/* 反馈 */
+export { Alert, Spinner, Skeleton, Progress, Tooltip } from './components/Feedback'
+export type {
+  AlertProps, AlertTone,
+  SpinnerProps, SkeletonProps, ProgressProps, TooltipProps,
+} from './components/Feedback'
+
 export { themeToCss, themesToCss } from './tokens'
 export type { ThemeTokens, ThemeDefinition } from './tokens'

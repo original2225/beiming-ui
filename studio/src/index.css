@@ -1,5 +1,14 @@
 @import "./lxgw-wenkai.css";
 @import "tailwindcss";
+
+/* Tailwind v4 默认只扫当前项目，扫不到 monorepo 里的 packages/*。
+ * 不加这两行，core 组件用到的类（size-3、size-4、tabular-nums 等）
+ * 一个都不会生成 —— 表现为 SVG 没有尺寸被撑满父容器、数字不对齐。
+ * 注意路径相对于本 css 文件。 */
+@source "../../packages/core/src";
+@source "../../packages/theme-ink/src";
+@source "../../packages/theme-neutral/src";
+
 @import "@beiming-ui/theme-ink/theme.css";
 @import "@beiming-ui/theme-neutral/theme.css";
 
