@@ -9,6 +9,7 @@
 @source "../../packages/theme-ink/src";
 @source "../../packages/theme-neutral/src";
 
+@import "@beiming-ui/core/transitions.css";
 @import "@beiming-ui/theme-ink/theme.css";
 @import "@beiming-ui/theme-neutral/theme.css";
 

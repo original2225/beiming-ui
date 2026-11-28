@@ -34,5 +34,9 @@ export type {
   SpinnerProps, SkeletonProps, ProgressProps, TooltipProps,
 } from './components/Feedback'
 
+/* 翻页 / 转场 */
+export { FlipSurface } from './components/FlipSurface'
+export type { FlipSurfaceProps, FlipVariant } from './components/FlipSurface'
+
 export { themeToCss, themesToCss } from './tokens'
 export type { ThemeTokens, ThemeDefinition } from './tokens'

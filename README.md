@@ -114,6 +114,23 @@ v4 默认只扫描当前项目目录，**扫不到 monorepo 里的 `packages/*`*
 
 反馈：`Alert`（4 语义色）、`Spinner`、`Skeleton`、`Progress`（含不确定态）、`Tooltip`
 
+动效：`FlipSurface`（两页之间的翻页 / 转场，5 个变体）
+
+```tsx
+const [side, setSide] = useState<'front' | 'back'>('front')
+<FlipSurface variant="vertical" flipped={side === 'back'} front={<登录 />} back={<注册 />} />
+```
+
+| variant | 怎么翻 | 典型场景 |
+|---|---|---|
+| `vertical` | 绕**上边框**（日历式） | 官网登录卡：注册页从后面翻上来 |
+| `book` | 绕**左边框**（书脊） | 书的左右翻页、分章内容 |
+| `cover` | 不转 3D，新页带投影从右侧压进来 | 视频转场里的「推入覆盖」 |
+| `windmill` | 两面反向对转 + 缩放淡入淡出 | 在多个面板 / 选项之间切 |
+| `curl` | 绕**右边框**翻起 + 卷曲高光与折痕阴影 | 最像真纸的一种 |
+
+实现要点在下面的「关于翻页动效的三个坑」，改 `transitions.css` 前必读。
+
 **theme-ink（水墨专属）**
 
 - `InkStroke` 墨痕分隔线
@@ -140,6 +157,38 @@ npm run typecheck  # 全部包类型检查
 2. **两段弧围月牙，内弧的 sweep 必须反向**。若和外弧同为 `sweep=1`，两弧同向凸出，围出来是实心椭圆（看着像满月）。
 
 正确写法：外弧 `A18,18 0 0,1`（凸到 x=46）、内弧 `A22,22 0 0,0`（凸到 x≈37.4），月牙最厚 8.65px。
+
+## 关于翻页动效的三个坑
+
+做 `FlipSurface` 时在真实浏览器里逐帧量出来的，改 `transitions.css` 前必读：
+
+**1. 绕某条边转 180° 后，盒子会「镜像」到这条边的另一侧，必须补一个同轴向位移把它拉回原位。**
+
+而且位移的**符号和直觉相反**（因为 rotate 之后的本地坐标系是反的），并且要写在 `rotate` **之后**：
+
+| 绕哪条边 | 正确写法 | 写错的后果（实测） |
+|---|---|---|
+| 上边框 | `rotateX(-180deg) translateY(-100%)` | 写 `+100%` 或把位移放前面 → 纸跑到卡片上方 487~974px 处，出了视口，看着像「翻上去就消失」 |
+| 左边框（书脊） | `rotateY(-180deg) translateX(-100%)` | 写 `+100%` → 背面偏到卡片左边 −564px |
+| 右边框 | `rotateY(-180deg) translateX(100%)` | 写 `−100%` → 背面偏到卡片右边 +565px |
+
+判据：翻完之后背面相对卡片框的偏移必须是 `(0, 0)`。这一条可以脚本量：
+`back.getBoundingClientRect().left - flip.getBoundingClientRect().left`。
+
+**2. 只翻「一张纸」，两面靠 `backface-visibility` 遮住。**
+
+不要做「两页同时对转」（A 从 0→−180、B 同时 180→0）：转到 90° 附近两页都侧对着屏幕、都不可见，中间会露出一帧背景，看着就是闪。
+`FlipSurface` 的做法是一张纸 + 正反两面，纸一转，背面自己朝上。
+
+**3. 容器绝不能 `overflow: hidden`，也不能用「父高靠子、子高靠父」的绝对定位配 JS 量高。**
+
+- `overflow: hidden` 会把翻到一半的纸直接裁掉，看不到「翻到卡片外面」的物理感。
+- 两面用 `grid-template-areas: 'stack'` 叠在同一格，高度自动取较高的那一面；用 `position: absolute; inset: 0` 再拿 JS 量子元素高度定父高，会形成循环依赖，实测两面高度全塌成 0。
+
+**另外两条与本库其他动效通用的规律：**
+
+- 用 CSS `transition` 驱动 `transform`，别用 keyframes。keyframes 需要靠类名切换启动，一旦状态类里混进定位属性（`position` / `inset`），切换那一帧布局就会塌。transition 只改 `transform`，天然没这个坑，中间帧也能被自动化直接读出来核对。
+- 遵循 `prefers-reduced-motion`：`transitions.css` 里统一退化成 1ms 直接切换，信息一点不少。
 
 ## 关于组件来源
 

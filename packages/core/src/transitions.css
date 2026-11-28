@@ -1,0 +1,184 @@
+/**
+ * 北冥 UI · 过渡 / 翻页动效（结构层，零色值）
+ *
+ * 为什么这批样式在 core 而不是某个 theme 里：
+ *   它描述的是「怎么动」——轴向、旋转、层级、遮挡，属于结构；
+ *   颜色一律走 --bm-* 槽位，所以水墨和中性两套皮肤都成立。
+ *
+ * 为什么用 transition 而不是 keyframes：
+ *   翻页最容易出的一类 bug 是「切换到 is-flipping-* 类的那一帧丢了定位，
+ *   两页一起塌回文档流」。用 transition 只改 transform，类名切换不碰布局属性，
+ *   从根本上没有这个坑；而且中间帧可以被自动化直接读出来核对。
+ *
+ * 三条硬约束（北冥官网登录卡上踩出来的，任何翻页都适用）：
+ *   1. 绕某条边转 180° 后，盒子会「镜像」到这条边的另一侧。
+ *      必须再补一个同轴向的位移把它拉回原位，且位移要写在 rotate 之后。
+ *      绕上边框 → rotateX(-180deg) translateY(-100%)
+ *      绕左边框 → rotateY(-180deg) translateX(100%)
+ *   2. 只翻「一张纸」，另一面靠 backface-visibility 遮住；
+ *      两页同时对转会在 90° 附近两页都不可见，露出背景。
+ *   3. 容器绝不能 overflow:hidden —— 纸要能甩到卡片外面去。
+ */
+
+/* ── 通用骨架 ───────────────────────────────────────── */
+
+.bm-flip {
+  display: grid;
+  grid-template-areas: 'stack';
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
+}
+
+/* 纸张本体：正反两面叠在同一格里，高度自动取较高的一面 */
+.bm-flip-leaf {
+  grid-area: stack;
+  display: grid;
+  grid-template-areas: 'stack';
+  transform-style: preserve-3d;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.38, 0.06, 0.26, 1);
+  will-change: transform;
+}
+
+.bm-flip-face {
+  grid-area: stack;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--bm-radius, 14px);
+  background: var(--bm-surface);
+  color: var(--bm-text);
+  overflow: hidden;
+}
+
+/* ── 1. vertical：上下翻（日历式，绕上边框） ───────────
+   北冥官网登录卡用的就是这个。注册页压在后面，翻上来盖住登录页。 */
+
+.bm-flip[data-variant='vertical'] .bm-flip-leaf {
+  transform-origin: top center;
+  transform: rotateX(0deg) translateY(0);
+}
+.bm-flip[data-variant='vertical'] .bm-flip-leaf.is-flipped {
+  transform: rotateX(-180deg) translateY(-100%);
+}
+.bm-flip[data-variant='vertical'] .bm-flip-face.is-back {
+  transform: rotateX(180deg);
+}
+
+/* ── 2. book：书的左右翻页（绕左边框，像翻书页） ────────
+   纸的左边固定在书脊上，右边缘抬起来向左转过去，落到书脊左侧。 */
+
+.bm-flip[data-variant='book'] .bm-flip-leaf {
+  transform-origin: left center;
+  transform: rotateY(0deg) translateX(0);
+}
+.bm-flip[data-variant='book'] .bm-flip-leaf.is-flipped {
+  /* 绕左边框转 180° 后本地 +X 指向屏幕 -X，所以要往【右】移必须写 -100%；
+     写 +100% 会把纸推到卡片左边两倍宽处（实测 -564px）。 */
+  transform: rotateY(-180deg) translateX(-100%);
+}
+.bm-flip[data-variant='book'] .bm-flip-face.is-back {
+  transform: rotateY(180deg);
+}
+
+/* ── 3. cover：覆盖翻页（视频转场里的「推入覆盖」） ──────
+   不转 3D。新页从右侧带着左缘投影压进来，旧页原地不动。 */
+
+.bm-flip[data-variant='cover'] .bm-flip-leaf {
+  transform: none;
+}
+.bm-flip[data-variant='cover'] .bm-flip-face.is-back {
+  transform: translateX(100%);
+  box-shadow: -20px 0 42px -8px rgba(0, 0, 0, 0.38);
+  z-index: 2;
+  transition-property: transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0.24, 1);
+}
+.bm-flip[data-variant='cover'] .bm-flip-leaf.is-flipped .bm-flip-face.is-back {
+  transform: translateX(0);
+  box-shadow: -4px 0 14px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* ── 4. windmill：风车式选择翻阅（反向对转 + 缩放） ──────
+   旧页像风车叶片一样转出去，新页反方向转进来。
+   适合在多个面板之间切换（选卡片、换皮肤、切页签）。 */
+
+.bm-flip[data-variant='windmill'] .bm-flip-leaf {
+  transform-origin: 50% 50%;
+  perspective: 1200px;
+}
+.bm-flip[data-variant='windmill'] .bm-flip-face {
+  transform-origin: 50% 50%;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.34, 1.04, 0.28, 1);
+}
+.bm-flip[data-variant='windmill'] .bm-flip-face.is-front {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+  z-index: 2;
+}
+.bm-flip[data-variant='windmill'] .bm-flip-face.is-back {
+  transform: rotate(-26deg) scale(0.78);
+  opacity: 0;
+  z-index: 1;
+}
+.bm-flip[data-variant='windmill'] .bm-flip-leaf.is-flipped .bm-flip-face.is-front {
+  transform: rotate(22deg) scale(0.78);
+  opacity: 0;
+}
+.bm-flip[data-variant='windmill'] .bm-flip-leaf.is-flipped .bm-flip-face.is-back {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+/* ── 5. curl：仿真书页（绕右边框翻起 + 卷曲明暗） ───────
+   真实纸张翻起来时，纸面会有一段受光高光和一道折痕阴影。
+   这里用一层渐变遮罩随翻动加深来模拟，成本低、观感够。 */
+
+.bm-flip[data-variant='curl'] .bm-flip-leaf {
+  transform-origin: right center;
+  transform: rotateY(0deg) translateX(0);
+}
+.bm-flip[data-variant='curl'] .bm-flip-leaf.is-flipped {
+  /* 绕右边框转 180° 后镜像到右侧，要往【左】拉回原位必须写 +100%
+     （同理，符号与直觉相反）。 */
+  transform: rotateY(-180deg) translateX(100%);
+}
+.bm-flip[data-variant='curl'] .bm-flip-face.is-back {
+  transform: rotateY(180deg);
+}
+/* 翻动时的卷曲明暗：前半程在右缘聚一道暗边，转过 90° 后逐渐散开 */
+.bm-flip[data-variant='curl'] .bm-flip-face.is-front::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.34) 0%,
+    rgba(0, 0, 0, 0.12) 9%,
+    rgba(255, 255, 255, 0.14) 20%,
+    rgba(255, 255, 255, 0) 38%
+  );
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+.bm-flip[data-variant='curl'] .bm-flip-leaf.is-flipped .bm-flip-face.is-front::after {
+  opacity: 1;
+}
+/* 纸抬起时外缘投影跟着加深 */
+.bm-flip[data-variant='curl'] .bm-flip-face.is-front {
+  transition-property: transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.36, 0.05, 0.24, 1);
+}
+.bm-flip[data-variant='curl'] .bm-flip-leaf.is-flipped .bm-flip-face.is-front {
+  box-shadow: -14px 10px 30px -12px rgba(0, 0, 0, 0.42);
+}
+
+/* ── 减少动效偏好：一律退化为直接切换，信息一点不少 ── */
+@media (prefers-reduced-motion: reduce) {
+  .bm-flip-leaf,
+  .bm-flip-face {
+    transition-duration: 1ms !important;
+  }
+}

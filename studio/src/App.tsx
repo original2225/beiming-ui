@@ -14,7 +14,9 @@ import {
   Button, Input, Field, Card, Badge,
   Select, Checkbox, Switch, RadioGroup, Slider,
   Alert, Spinner, Skeleton, Progress, Tooltip,
+  FlipSurface,
 } from '@beiming-ui/core'
+import type { FlipVariant } from '@beiming-ui/core'
 import type { ThemeDefinition } from '@beiming-ui/core'
 import {
   ink, rice, InkStroke, Seal,
@@ -72,7 +74,7 @@ const INK_PANES: PaneDef[] = [
 ]
 
 export default function App() {
-  const [tab, setTab] = useState<'styles' | 'ink'>('styles')
+  const [tab, setTab] = useState<'styles' | 'ink' | 'motion'>('styles')
   const [showNeutralDark, setShowNeutralDark] = useState(false)
 
   const panes = tab === 'styles'
@@ -105,6 +107,12 @@ export default function App() {
               >
                 水墨两档
               </button>
+              <button
+                onClick={() => setTab('motion')}
+                className={`rounded px-2.5 py-1 transition-colors ${tab === 'motion' ? 'bg-[var(--bm-surface-hover)] font-medium' : 'text-[var(--bm-text-muted)]'}`}
+              >
+                转场动效
+              </button>
             </div>
             {tab === 'styles' && (
               <label className="flex cursor-pointer items-center gap-1.5 text-[var(--bm-text-secondary)]">
@@ -117,6 +125,7 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-[1500px] px-6 py-8">
+        {tab === 'motion' && <MotionGallery />}
         <p className="bm-spread mb-5 text-xs text-[var(--bm-text-muted)]">
           {tab === 'styles'
             ? '同一批 core 组件，在两种风格下应当完全不同 —— 这就是「风格住在 theme 里，不在组件里」。'
@@ -327,6 +336,93 @@ function ThemePane({ title, subtitle, theme, note, inkOnly }: PaneDef) {
           </div>
         )}
       </div>
+    </section>
+  )
+}
+
+/* ── 转场动效预览 ───────────────────────────────────── */
+
+const MOTION_DEFS: { variant: FlipVariant; title: string; desc: string }[] = [
+  { variant: 'vertical', title: '上下翻 · 日历式', desc: '绕上边框转，注册页从后面翻上来盖住登录页 —— 官网登录卡用的这个' },
+  { variant: 'book', title: '书的左右翻页', desc: '绕左边框（书脊）转，右缘抬起向左翻过去' },
+  { variant: 'cover', title: '覆盖翻页', desc: '不转 3D，新页带着左缘投影从右侧压进来（视频转场常用）' },
+  { variant: 'windmill', title: '风车式选择翻阅', desc: '两面反向对转 + 缩放淡出淡入，适合在多个面板间切' },
+  { variant: 'curl', title: '仿真书页', desc: '绕右边框翻起，带卷曲高光与折痕阴影，最像真纸' },
+]
+
+function MotionGallery() {
+  const [state, setState] = useState<Record<string, boolean>>({})
+  return (
+    <section className="mb-8">
+      <h2 className="mb-1 text-sm font-bold" style={{ fontFamily: 'var(--bm-font-display)' }}>
+        FlipSurface · 五种翻页 / 转场
+      </h2>
+      <p className="mb-5 text-xs text-[var(--bm-text-muted)]">
+        同一个组件、五个变体。点「翻」看动效；点两面任意位置也能翻。结构走 core，颜色走 token，
+        所以下面每张卡都能同时在水墨与中性皮肤下成立。
+      </p>
+
+      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+        {MOTION_DEFS.map(({ variant, title, desc }) => {
+          const flipped = !!state[variant]
+          return (
+            <div key={variant} className="overflow-hidden border border-[var(--bm-border)]"
+                 style={{ borderRadius: 'var(--bm-radius, 14px)' }}>
+              <div className="flex items-center justify-between gap-2 border-b border-[var(--bm-border)] bg-[var(--bm-surface)] px-3 py-2">
+                <h3 className="text-xs font-bold">{title}</h3>
+                <button
+                  type="button"
+                  onClick={() => setState((s) => ({ ...s, [variant]: !s[variant] }))}
+                  className="shrink-0 border border-[var(--bm-border)] px-2 py-0.5 text-[0.6875rem] transition-colors hover:bg-[var(--bm-surface-hover)]"
+                  style={{ borderRadius: 'var(--bm-radius-sm, 10px)' }}
+                >
+                  {flipped ? '翻回' : '翻'}
+                </button>
+              </div>
+
+              {/* 舞台：给足内边距，纸翻到卡片外面时才看得见 */}
+              <div className="bg-[var(--bm-bg)] px-4 py-6">
+                <FlipSurface
+                  variant={variant}
+                  flipped={flipped}
+                  height={200}
+                  front={
+                    <button
+                      type="button"
+                      onClick={() => setState((s) => ({ ...s, [variant]: true }))}
+                      className="flex size-full flex-col items-center justify-center gap-1.5 p-4 text-center"
+                    >
+                      <span className="text-xs font-semibold">正面 · 登录</span>
+                      <span className="text-[0.6875rem] text-[var(--bm-text-muted)]">点我翻过去 →</span>
+                    </button>
+                  }
+                  back={
+                    <button
+                      type="button"
+                      onClick={() => setState((s) => ({ ...s, [variant]: false }))}
+                      className="flex size-full flex-col items-center justify-center gap-1.5 p-4 text-center"
+                    >
+                      <span className="text-xs font-semibold">背面 · 注册</span>
+                      <span className="text-[0.6875rem] text-[var(--bm-text-muted)]">← 点我翻回来</span>
+                    </button>
+                  }
+                />
+              </div>
+
+              <p className="border-t border-[var(--bm-border)] px-3 py-2 text-[0.6875rem] leading-relaxed text-[var(--bm-text-muted)]">
+                {desc}
+              </p>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="mt-4 text-[0.6875rem] leading-relaxed text-[var(--bm-text-muted)]">
+        实现要点：全部用 CSS transition 驱动 transform（不用 keyframes），
+        切状态那一帧不碰布局属性，所以不会出现「两页一起塌回文档流」；
+        绕边转 180° 后必须补同轴向位移把纸拉回原位（绕上边框 → <code>rotateX(-180deg) translateY(-100%)</code>，
+        绕左边框 → <code>rotateY(-180deg) translateX(-100%)</code>，绕右边框 → <code>translateX(100%)</code>；符号与直觉相反，别照字面推），且位移要写在 rotate 之后。
+      </p>
     </section>
   )
 }

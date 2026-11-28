@@ -6,7 +6,8 @@
   "description": "北冥 UI 通用组件与设计 token（不含任何品牌配色）",
   "exports": {
     ".": "./src/index.ts",
-    "./tokens": "./src/tokens.ts"
+    "./tokens": "./src/tokens.ts",
+    "./transitions.css": "./src/transitions.css"
   },
   "peerDependencies": {
     "react": "^19.0.0",
